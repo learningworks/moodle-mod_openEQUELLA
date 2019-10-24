@@ -42,3 +42,9 @@
 .equella-page #panelContent.yui3-widget-loading {
 	display: none;
 }
+
+[data-dnd-handler="equella"] textarea {
+	width: 100%;
+	overflow: auto;
+    resize: both;
+}

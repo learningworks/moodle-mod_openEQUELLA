@@ -47,19 +47,49 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                             }
                             //Allison changed dialog content
                             //content += '<p>'+M.util.get_string('actionchoice', 'moodle', file.name)+'</p>';
-                            content += '<div id="dndupload_handlers' + uploadid + '">';
+                            content += '<div id="dndupload_handlers' + uploadid + '" data-dnd-handler="equella">';
                             for (var i = 0; i < handlers.length; i++) {
                                 //next if (handlers[i].module != 'equella'); //Allison
                                 if (handlers[i].module == 'equella') {
                                     var id = 'dndupload_handler' + uploadid + handlers[i].module;
-                                    content += '<label>Does this include copyright content from other sources (e.g. images, journal articles):* </label>';
-                                    content += '<input type="radio" name="iscopyright" value="Yes">Yes <input type="radio" name="iscopyright" value="No">No<br />';
-                                    content += '<label for="title">Title:* </label>';
-                                    content += '<input type="text" size=100 style="width:650px" name="title" id="' + uploadid + 'title"/><br/>';
-                                    content += '<label for="description">Description:* </label>';
-                                    content += '<textarea cols="90" rows="4" name="desc" id="' + uploadid + 'desc"/></textarea><br/>';
-                                    content += '<label for="keyword">Keyword (Separate keywords or phrases with commas): </label>';
-                                    content += '<input type="text" size=100 style="width:650px" name="keyword" id="' + uploadid + 'kw"/><br/>';
+                                    content += "<label>Do you confirm that the resources you are uploading are copyright compliant, and are aware that you are personally liable for copyright compliance?</label>";
+                                    content += '<input type="radio" name="iscopyright" value="No">&nbsp;No'
+                                        + '&nbsp;'
+                                        + ' <input type="radio" name="iscopyright" value="Yes">&nbsp;Yes'
+                                        + '<br>';
+
+                                    content += '<label>Subject Area:* </label>&nbsp;';
+                                    content += '<select id="' + uploadid + 'subject">'
+                                        + '<option value="">Please select one</option>'
+                                        + '<option value="Architectural Studies">Architectural Studies</option>'
+                                        + '<option value="Business">Business</option>'
+                                        + '<option value="Computing">Computing</option>'
+                                        + '<option value="Creative Industries">Creative Industries</option>'
+                                        + '<option value="Engineering">Engineering</option>'
+                                        + '<option value="Food and Hospitality">Food and Hospitality</option>'
+                                        + '<option value="Humanities">Humanities</option>'
+                                        + '<option value="Mathematics">Mathematics</option>'
+                                        + '<option value="Medical Imaging">Medical Imaging</option>'
+                                        + '<option value="Midwifery">Midwifery</option>'
+                                        + '<option value="Nursing">Nursing</option>'
+                                        + '<option value="Science">Science</option>'
+                                        + '<option value="Social Work">Social Work</option>'
+                                        + '<option value="Sport Science">Sport Science</option>'
+                                        + '<option value="Sustainability and Outdoor Education">Sustainability and Outdoor Education</option>'
+                                        + '<option value="Te Puna W&#x0101;naka">Te Puna W&#257;naka</option>'
+                                        + '<option value="Teacher Education">Teacher Education</option>'
+                                        + '<option value="Tourism">Tourism</option>'
+                                        + '<option value="Trades">Trades</option>'
+                                        + '<option value="Veterinary Science">Veterinary Science</option>'
+                                        + '<option value="Other">Other</option></select><br>';
+
+
+                                    content += '<label>Title:* </label>';
+                                    content += '<input type="text" size=100 style="width:100%" name="title" id="' + uploadid + 'title"/><br>';
+                                    content += '<label>Description:* </label>';
+                                    content += '<textarea style="width:100%;resize: both;" cols="90" rows="4" id="' + uploadid + 'desc"/></textarea><br>';
+                                    content += '<label>Keyword (Separate keywords or phrases with commas): </label>';
+                                    content += '<input type="text" size=100 style="width:100%" name="keyword" id="' + uploadid + 'kw"/><br>';
                                     content += '</label><br/>';
                                 }
                             }
@@ -68,8 +98,8 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                             var Y = this.Y;
                             var self = this;
                             var panel = new M.core.dialogue({
-                              headerContent: '<img src="../mod/equella/pix/equella-blue.png" width="20px" /> <b>Equella Contribution Tool</b><br /> This adds the resource to Equella',
-                              bodyContent: content,
+                                headerContent: '<img src="../mod/equella/pix/equella-blue.png" width="20px" /> <b>Te Kete Contribution Tool</b><br /> This adds the resource to Te Kete (Equella)',
+                                bodyContent: content,
                                 width: '700px',
                                 modal: true,
                                 visible: true,
@@ -97,9 +127,10 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                                     var module = 'equella';
                                     var dnd_cp =  document.getElementsByName("iscopyright");
                                     var dnd_cp_value = '';
-                                    var dnd_title = '';
+                                    var dnd_subject = document.getElementById(uploadid + "subject");
+                                    var dnd_title = document.getElementById(uploadid + "title");
                                     var dnd_desc = document.getElementById(uploadid + "desc");
-                                    var dnd_kw = '';
+                                    var dnd_kw = document.getElementById(uploadid + "dw");
                                     var div = Y.one('#dndupload_handlers' + uploadid);
                                     /* replaced component value fetching
                                      div.all('input').each(function(input) {
@@ -127,6 +158,12 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                                       return;
                                     }
 
+                                    if (dnd_subject.value === "") {
+                                        alert("Please select a subject area from the pull-down menu.");
+                                        module = false;
+                                        return;
+                                    }
+
                                     if (dnd_title.length < 6) {
                                         alert('Your title needs to be at least six characters long.');
                                         module = false;
@@ -146,7 +183,8 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                                     // Remember this selection for next time
                                     self.lastselected[extension] = module;
                                     // Do the upload
-                                    self.upload_file_with_meta(file, section, sectionnumber, module, dnd_cp_value, dnd_title, dnd_desc.value, dnd_kw);
+                                    self.upload_file_with_meta(file, section, sectionnumber, module, dnd_cp_value, dnd_subject.value, dnd_title, dnd_desc.value, dnd_kw);
+
                                 },
                                 section: Y.WidgetStdMod.FOOTER
                             });
@@ -159,7 +197,7 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                                 section: Y.WidgetStdMod.FOOTER
                             });
                         }
-                        M.course_dndupload.upload_file_with_meta = function (file, section, sectionnumber, module, cp, title, desc, kw) {
+                        M.course_dndupload.upload_file_with_meta = function (file, section, sectionnumber, module, cp, subject, title, desc, kw) {
 
                             // This would be an ideal place to use the Y.io function
                             // however, this does not support data encoded using the
@@ -222,6 +260,7 @@ YUI.add('moodle-mod_equella-dndupload', function (Y) {
                             formData.append('module', module);
                             formData.append('type', 'Files');
                             formData.append('dndcopyright', cp);
+                            formData.append('dndsubject', subject);
                             formData.append('dndtitle', title);
                             formData.append('dnddesc', desc);
                             formData.append('dndkw', kw);
