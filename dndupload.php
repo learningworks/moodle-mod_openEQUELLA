@@ -37,6 +37,7 @@ $contents = optional_param('contents', null, PARAM_RAW); // It will be up to eac
 
 $metadata = new stdClass();
 $metadata->eqdndcopyright = optional_param('dndcopyright', '', PARAM_TEXT);
+$metadata->eqdndsubject = optional_param('dndsubject', '', PARAM_TEXT);
 $metadata->eqdndtitle = optional_param('dndtitle', '', PARAM_TEXT);
 $metadata->eqdnddesc = optional_param('dnddesc', '', PARAM_TEXT);
 $metadata->eqdndkw = optional_param('dndkw', '', PARAM_TEXT);
