@@ -42,3 +42,7 @@
 .equella-page #panelContent.yui3-widget-loading {
 	display: none;
 }
+
+.moodle-dialogue-equella-header img {
+	margin: 0 5px;
+}
