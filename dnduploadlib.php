@@ -33,6 +33,7 @@ class equella_dndupload_ajax_processor extends dndupload_ajax_processor {
 
     protected $displayname = null;
     protected $copyright = null;
+    protected $subject = null;
     protected $itemdescription = null;
     protected $itemkeyword = null;
 
@@ -73,6 +74,7 @@ class equella_dndupload_ajax_processor extends dndupload_ajax_processor {
         require_sesskey();
         $this->displayname = $this->metadata->eqdndtitle;
         $this->copyright = $this->metadata->eqdndcopyright;
+        $this->subject = $this->metadata->eqdndsubject;
         $this->itemdescription = $this->metadata->eqdnddesc;
         $this->itemkeyword = $this->metadata->eqdndkw;
 
@@ -108,6 +110,7 @@ class equella_dndupload_ajax_processor extends dndupload_ajax_processor {
         $data->coursemodule = $this->cm->id;
         $data->displayname = $this->displayname;
         $data->copyright = $this->copyright;
+        $data->subject = $this->subject;
         $data->itemdescription = $this->itemdescription;
         $data->itemkeyword = $this->itemkeyword;
 
