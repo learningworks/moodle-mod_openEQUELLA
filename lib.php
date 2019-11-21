@@ -475,12 +475,18 @@ function equella_dndupload_handle($uploadinfo) {
         if (isset($uploadinfo->copyright)){
             $params['item/iscopyright'] = $uploadinfo->copyright;
             // Legacy. Deprecated
-        	$params['copyrightflag'] = $uploadinfo->copyright;
+            $params['copyrightflag'] = $uploadinfo->copyright;
         }
     	if (isset($uploadinfo->itemkeyword)) {
             $params['item/keyword'] = $uploadinfo->itemkeyword;
             // Legacy. Deprecated
         	$params['itemkeyword'] = $uploadinfo->itemkeyword;
+        }
+
+        // Ara custom passed properties.
+        if (isset($uploadinfo->subject)){
+            $params['categoryid'] = $uploadinfo->subject;
+            $params['item/categoryid'] = $uploadinfo->subject;
         }
 
         $info = equella_rest_api::contribute_file_with_shared_secret($file->get_filename(), $handle, $params);
