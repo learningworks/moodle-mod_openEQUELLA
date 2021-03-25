@@ -641,16 +641,3 @@ function equella_grade_item_delete($eq) {
     return grade_update(EQUELLA_SOURCE, $eq->courseid, EQUELLA_ITEM_TYPE, EQUELLA_ITEM_MODULE, $eq->id, 0, NULL, array('deleted'=>1));
 }
 
-/**
- * Not currently used. Suppress developer debug message "You have declared one of
- * equella_grade_item_update and equella_update_grades but not both."
- *
- * @see https://github.com/openequella/moodle-mod_openEQUELLA/issues/78
- *
- * @category grade
- * @param stdClass $equella
- * @param int $userid
- * @param bool $nullifnone
- */
-function equella_update_grades(stdClass $equella, int $userid = 0, bool $nullifnone = true) {
-}
