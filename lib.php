@@ -483,6 +483,12 @@ function equella_dndupload_handle($uploadinfo) {
         	$params['itemkeyword'] = $uploadinfo->itemkeyword;
         }
 
+        // Ara custom passed properties.
+        if (isset($uploadinfo->subject)){
+            $params['categoryid'] = $uploadinfo->subject;
+            $params['item/categoryid'] = $uploadinfo->subject;
+        }
+
         $info = equella_rest_api::contribute_file_with_shared_secret($file->get_filename(), $handle, $params);
         if (isset($info->error)) {
             throw new equella_exception($info->error_description);
